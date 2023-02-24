@@ -156,7 +156,8 @@ pub fn jumpi(state: &mut Machine) -> Control {
 			Control::Exit(ExitError::InvalidJump.into())
 		}
 	} else {
-		event!(JUMPI { 
+		event!(JUMPI {
+			machine: state,
 			dest: state.position.as_ref().unwrap() + 1 as usize
 		});
 		Control::Continue(1)
