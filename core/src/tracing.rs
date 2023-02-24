@@ -1,16 +1,20 @@
 //! Allows to listen to runtime events.
+
+use crate::Machine;
 environmental::environmental!(listener: dyn EventListener + 'static);
 
 pub trait EventListener {
 	fn event(&mut self, event: Event);
 }
 
-#[derive(Debug, Copy, Clone)]
-pub enum Event {
+#[derive(Copy, Clone)]
+pub enum Event<'a> {
 	JUMP {
+        machine: &'a Machine,
 		dest: usize
 	},
     JUMPI {
+        machine: &'a Machine,
         dest: usize
     }
 }

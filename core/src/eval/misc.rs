@@ -130,6 +130,7 @@ pub fn jump(state: &mut Machine) -> Control {
 
 	if state.valids.is_valid(dest) {
 		event!(JUMP {
+			machine: state,
 			dest: dest
 		});
 		Control::Jump(dest)
@@ -147,6 +148,7 @@ pub fn jumpi(state: &mut Machine) -> Control {
 		let dest = as_usize_or_fail!(dest, ExitError::InvalidJump);
 		if state.valids.is_valid(dest) {
 			event!(JUMPI {
+				machine: state,
 				dest: dest
 			});
 			Control::Jump(dest)
