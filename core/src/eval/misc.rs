@@ -3,6 +3,19 @@ use crate::{ExitError, ExitFatal, ExitRevert, ExitSucceed, Machine};
 use core::cmp::min;
 use primitive_types::{H256, U256};
 
+#[cfg(feature = "tracing")]
+macro_rules! event {
+	($x:expr) => {
+		use crate::tracing::Event::*;
+		crate::tracing::with(|listener| listener.event($x));
+	};
+}
+
+#[cfg(not(feature = "tracing"))]
+macro_rules! event {
+	($x:expr) => {};
+}
+
 #[inline]
 pub fn codesize(state: &mut Machine) -> Control {
 	let size = U256::from(state.code.len());
@@ -116,6 +129,9 @@ pub fn jump(state: &mut Machine) -> Control {
 	let dest = as_usize_or_fail!(dest, ExitError::InvalidJump);
 
 	if state.valids.is_valid(dest) {
+		event!(JUMP {
+			dest: dest
+		});
 		Control::Jump(dest)
 	} else {
 		Control::Exit(ExitError::InvalidJump.into())
@@ -130,11 +146,17 @@ pub fn jumpi(state: &mut Machine) -> Control {
 	if value != H256::zero() {
 		let dest = as_usize_or_fail!(dest, ExitError::InvalidJump);
 		if state.valids.is_valid(dest) {
+			event!(JUMPI {
+				dest: dest
+			});
 			Control::Jump(dest)
 		} else {
 			Control::Exit(ExitError::InvalidJump.into())
 		}
 	} else {
+		event!(JUMPI { 
+			dest: state.position.as_ref().unwrap() + 1 as usize
+		});
 		Control::Continue(1)
 	}
 }

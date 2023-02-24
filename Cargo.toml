@@ -67,7 +67,10 @@ with-serde = [
 tracing = [
 	"environmental",
 	"evm-gasometer/tracing",
-	"evm-runtime/tracing",
+	"evm-runtime/tracing"	
+]
+cov_tracing = [ # Performance sensitive tracing
+	"evm-core/tracing"
 ]
 
 [workspace]

@@ -1,7 +1,7 @@
 //! Core layer for EVM.
 
 #![deny(warnings)]
-#![forbid(unsafe_code, unused_variables, unused_imports)]
+#![forbid(unsafe_code, unused_variables)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate alloc;
@@ -14,6 +14,10 @@ mod opcode;
 mod stack;
 mod utils;
 mod valids;
+
+
+#[cfg(feature = "tracing")]
+pub mod tracing;
 
 pub use crate::error::{Capture, ExitError, ExitFatal, ExitReason, ExitRevert, ExitSucceed, Trap};
 pub use crate::memory::Memory;
